@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title> Create Your Account </title>
+</head>
+<body>
+    <form action="/regist" method="post" autocomplete="off">
+        <input type="hidden" id="check-id" value="0">
+        <input type="hidden" id="check-name" value="0">
+        <div id="duplicate-warning"></div>
+        <input type="text" placeholder="ID" name="id" id="id"><br>
+        <input type="text" placeholder="Username" name="username" id="username"><br>
+        <input type="password" placeholder="Password" name="pw" id="pw"><br>
+        <input type="password" placeholder="Re-Enter Password" name="check-pw" id="check-pw"><br>
+        <div id="pw-warning"></div>
+        <input type="submit" value="Create Account" id="create-btn">
+    </form>
+</body>
+<script>
+    $("#create-btn").on("click", function(e){
+        let id = $("#id").val();
+        let check_id = $("#check-id").val();
+        if(id.length < 5){
+            alert("ID는 5글자 이상");
+            return false;
+        }else if(check_id == 0){
+            alert("ID already exists");
+            return false;
+        }
+
+        let username = $("#username").val();
+        let check_name = $("#check-name").val();
+        if(username.length < 3){
+            alert("Username는 5글자 이상");
+            return false;
+        }else if(check_name == 0){
+            alert("Username already exists");
+            return false;
+        }
+
+        let pw = $("#pw").val();
+        let check = $("#check-pw").val();
+        if(pw != check){
+            alert("Password가 일치하지 않음");
+            return false;
+        }
+        else if(pw.length < 5){
+            alert("Password는 5글자 이상");
+            return false;
+        }
+    });
+
+
+    $("#id").on("keyup", function(e){
+        let id = $(this).val();
+
+        if(id.length < 5){
+            $('#duplicate-warning').html('ID is too short');
+            $('#duplicate-warning').css('color', 'red');
+            $('#check-id').val(0);
+        }
+        else{
+            $.ajax({
+                url : "/regist",
+                method : "post",
+                data : {
+                    "id" : id
+                }
+            }).done(function(result){
+                if(result == 'alreadyID') {
+                    $('#duplicate-warning').html('ID Already Exists');
+                    $('#duplicate-warning').css('color', 'red');
+                    $('#check-id').val(0);
+                }
+                else{
+                    $('#duplicate-warning').html('ID Available');
+                    $('#duplicate-warning').css('color', 'blue');
+                    $('#check-id').val(1);
+                }
+            });
+        }
+    });
+    $("#username").on("keyup", function(e){
+        let username = $(this).val();
+
+        if(username.length < 3){
+            $('#duplicate-warning').html('Username is too short');
+            $('#duplicate-warning').css('color', 'red');
+            $('#check-name').val(0);
+        }
+        else{
+            $.ajax({
+                url : "/regist",
+                method : "post",
+                data : {
+                    "username" : username
+                }
+            }).done(function(result){
+                if(result == 'alreadyName') {
+                    $('#duplicate-warning').html('Username Already Exists');
+                    $('#duplicate-warning').css('color', 'red');
+                    $('#check-name').val(0);
+                }
+                else{
+                    $('#duplicate-warning').html('Username Available');
+                    $('#duplicate-warning').css('color', 'blue');
+                    $('#check-name').val(1);
+                }
+            });
+        }
+    });
+</script>
+</html>
+

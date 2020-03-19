@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title> Article </title>
+</head>
+<body>
+    {% if alert == "id" %}
+    <script>alert("존재하지 않는 아이디 입니다.");</script>
+    {% elif alert == "pw" %}
+    <script>alert("비밀번호를 확인해주세요.");</script>
+    {% elif alert == "write" %}
+    <script>alert("게시글이 작성되었습니다.");</script>
+    {% endif %}
+
+    {% if "user" not in session %}
+    <form action="/login_check" method="post">
+        <input type="text" placeholder="ID" name="id" id="id">
+        <input type="password" placeholder="Password" name="pw" id="pw">
+        <input type="submit" value="login" id="login-btn">
+    </form>
+    {% else %}
+    <span>Hello, {{user["USER_ID"]}}<a href="/writer"><input type="button" value="글쓰기" id="write"></a> <a href="/logout">로그아웃</a></span>
+
+    <ol>
+    {% for article in articles %}
+        {% if session["user"] == article["USER_SN"] %}
+        <li><span class="myContent" data-sn='{{article["ARTICLE_SN"]}}' data-mine="0">{{article["ARTICLE_TITLE"]}} / {{article["USER_ID"]}}</span></li>
+        {% else %}
+        <li><span class="myContent" data-sn='{{article["ARTICLE_SN"]}}' data-mine="1">{{article["ARTICLE_TITLE"]}} / {{article["USER_ID"]}}</span></li>
+        {% endif %}
+    {% endfor %}
+    </ol>
+    <script>
+        $(".myContent").on("click", function(e){
+            if($(this).data("mine") == 1){
+                var pw = prompt("비밀번호를 입력하세요");
+                var sn = $(this).data("sn");
+                $.ajax({
+                    url:"show_check",
+                    data: {pw : pw, sn : sn},
+                    method : "post"
+                }).done(function(result){
+                    if(result["result"] == "success"){
+                        location.href = "/myContent?article_sn="+sn;
+                    }
+                    else{
+                        alert("비밀번호가 맞지 않습니다.");
+                    }
+                });
+
+            }
+            else{
+                var sn = $(this).data("sn");
+                location.href = "/myContent?article_sn="+sn;
+            }
+        });
+
+
+    </script>
+
+    {% endif %}
+
+
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if "article" in session and session["article"]|int == article["ARTICLE_SN"]|int %}
+
+    <h1>{{article["ARTICLE_TITLE"]}}</h1>
+    <h3>{{article["ARTICLE_CONTENT"]}}</h3>
+    {% elif "user" in session and session["user"] == article["USER_SN"] %}
+    <h1>{{article["ARTICLE_TITLE"]}}</h1>
+    <h3>{{article["ARTICLE_CONTENT"]}}</h3>
+    {% else %}
+
+    <h1> Not Allowed. </h1>
+    {% endif %}
+</body>
+</html>
