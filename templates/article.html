@@ -19,10 +19,13 @@
     <form action="/login_check" method="post">
         <input type="text" placeholder="ID" name="id" id="id">
         <input type="password" placeholder="Password" name="pw" id="pw">
-        <input type="submit" value="login" id="login-btn">
+        <input type="submit" value="Login" id="login-btn">
+        <input type="button" value="Register" onclick="window.location.href='{{ url_for('register') }}';"></input>
     </form>
     {% else %}
-    <span>Hello, {{user["USER_ID"]}}<a href="/writer"><input type="button" value="글쓰기" id="write"></a> <a href="/logout">로그아웃</a></span>
+    <span>Hello, {{user["USER_ID"]}}<a href="/writer"><input type="button" value="글쓰기" id="write"></a> <a href="/logout">로그아웃</a>
+    <a href="/delete"><input type="button" value="탈퇴" id="delete-account"></a>
+    </span>
 
     <ol>
     {% for article in articles %}

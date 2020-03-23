@@ -2,10 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title> Remove Your Account </title>
 </head>
 <body>
-    <input type="password" placeholder="password" id="pw" name="pw">
-    <input type="submit" value="Click to Remove">
+    <form action="/deleteAccount" method="post">
+        <input type="password" placeholder="password" id="pw" name="pw">
+        <input type="submit" value="Delete Account" id="delete-btn" name="delete-btn">
+    </form>
 </body>
 </html>
+<script>
+</script>

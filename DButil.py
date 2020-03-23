@@ -1,4 +1,5 @@
 import pymysql
+
 def getUser(conn, session):
     if "user" in session:
         user_sn = session["user"]

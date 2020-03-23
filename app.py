@@ -18,15 +18,10 @@ RESPONSE_FAIL = 'fail'
 
 ###################################################################################
 @app.route('/')
-def index():
-    return render_template('article.html')
-
-
-
 @app.route('/article')
 def article():
     user = getUser(conn, session)
-    articles = getArticles(conn);
+    articles = getArticles(conn)
     warning = request.args.get('warning')
     if warning is not None:
         return render_template('article.html', alert=warning, user=user, articles=articles)
@@ -149,6 +144,33 @@ def write():
 def logout():
     session.pop('user', None)
     return redirect('article')
+
+########################### DELETE ACCOUNT #########################################
+@app.route('/delete')
+def delete():
+    return render_template('delete.html')
+
+@app.route('/deleteAccount', methods=['POST'])
+def deleteAccount():
+    pw = request.form.get('pw')
+    user = session['user']
+
+    curs = conn.cursor()
+
+    if request.method == 'POST':
+        sql = 'SELECT * FROM user WHERE USER_SN=%s AND USER_PW=%s'
+        curs.execute(sql, (user, pw))
+        result = curs.fetchall()
+
+        if len(result) > 0:
+            sql = 'DELETE FROM user WHERE USER_SN=%s'
+            curs.execute(sql, (user))
+            conn.commit()
+            session.pop('user', None)
+            return redirect('article')
+        else:
+            return render_template('alert.html', message='Wrong Password!', back=True)
+
 try:
     app.run()
 except:
